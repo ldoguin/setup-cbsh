@@ -12,18 +12,18 @@ on:
 
 defaults:
   run:
-    shell: nu {0}
+    shell: cbsh {0}
 
 jobs:
   basic-usage:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4.1.7
-    - uses: hustcer/setup-nu@develop
+    - uses: ldoguin/setup-cbsh@develop
       with:
         version: '*'
         enable-plugins: true
-    - run: print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
+    - run: print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
     - run: |
         print $'Current env:(char nl)'
         print $env

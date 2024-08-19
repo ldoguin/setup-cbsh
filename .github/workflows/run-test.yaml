@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    shell: nu {0}
+    shell: cbsh {0}
 
 jobs:
   test-latest:
@@ -20,11 +20,11 @@ jobs:
         os: [ubuntu-22.04, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
-    name: test (${{matrix.os}}, setup-nu@latest-dev)
+    name: test (${{matrix.os}}, setup-cbsh@latest-dev)
     steps:
     - uses: actions/checkout@v4.1.7
-    - name: Setup nu@latest
-      uses: hustcer/setup-nu@develop
+    - name: Setup cbsh@latest
+      uses: ldoguin/setup-cbsh@develop
       with:
         check-latest: true
         enable-plugins: true
@@ -33,14 +33,14 @@ jobs:
     - name: You can run bash commands, too
       run: pwd && ls -la
       shell: bash
-    - name: Default shell will be `nu`
+    - name: Default shell will be `cbsh`
       run: |
-        print $'Nu version info:(char nl)'; print (version)
+        print $'Couchbase Shell version info:(char nl)'; print (version)
         print $'Current env:(char nl)'; print $env
         print 'Current NU_LIB_DIRS:'
         print $env.NU_LIB_DIRS
-        print $'Nu path:(which nu)(char nl)'
-        print $"(char nl)Dir contents:(char nl)"; print (ls ((which nu).path.0 | path dirname))
+        print $'Couchbase Shell path:(which cbsh)(char nl)'
+        print $"(char nl)Dir contents:(char nl)"; print (ls ((which cbsh).path.0 | path dirname))
         def greeting [name: string] {
           print $'Hello ($name)'
         }
@@ -52,17 +52,17 @@ jobs:
         os: [ubuntu-22.04, macos-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
-    name: test (${{matrix.os}}, setup-nu@v3)
+    name: test (${{matrix.os}}, setup-cbsh@v1)
     steps:
     - uses: actions/checkout@v4.1.7
-    - name: Setup nu@latest
-      uses: hustcer/setup-nu@v3
+    - name: Setup cbsh@latest
+      uses: ldoguin/setup-cbsh@v1
       with:
         version: v0.86
         enable-plugins: true
       env:
         ACTIONS_STEP_DEBUG: true
-    - run: print $'Nu version info:(char nl)'; version
+    - run: print $'Couchbase Shell version info:(char nl)'; version
     - run: print $'Current env:(char nl)'; $env
-    - run: print $'Nu path:(which nu)(char nl)'
-    - run: print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
+    - run: print $'Couchbase Shell path:(which cbsh)(char nl)'
+    - run: print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)

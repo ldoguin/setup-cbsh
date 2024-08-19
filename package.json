@@ -1,8 +1,8 @@
 {
-  "name": "setup-nu",
-  "version": "3.12.0",
-  "actionVer": "v3.12",
-  "description": "A Github Action to Setup a Nushell Environment to Run Nu Scripts or Commands",
+  "name": "setup-cbsh",
+  "version": "1.0.0",
+  "actionVer": "v1.0",
+  "description": "A Github Action to Setup a Couchbase shell Environment to Run Nu Scripts or Commands",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hustcer/setup-nu.git"
+    "url": "git+https://github.com/ldoguin/setup-cbsh.git"
   },
-  "author": "hustcer <hustcer@outlook.com>",
+  "author": "ldoguin <laurent.doguin@couchbase.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hustcer/setup-nu/issues"
+    "url": "https://github.com/ldoguin/setup-cbsh/issues"
   },
-  "homepage": "https://github.com/hustcer/setup-nu#readme",
+  "homepage": "https://github.com/ldoguin/setup-cbsh#readme",
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/tool-cache": "^2.0.1",

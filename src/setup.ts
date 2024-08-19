@@ -22,31 +22,13 @@ const PLATFORM_DEFAULT_MAP: Record<Platform, string[]> = {
   linux_x64: ['x86_64-unknown-linux-musl', 'x86_64-unknown-linux-gnu', 'linux.tar.gz'],
 };
 
-const PLATFORM_FULL_MAP: Record<Platform, string[]> = {
-  darwin_x64: ['x86_64-darwin-full'],
-  darwin_arm64: ['aarch64-darwin-full'],
-  win32_x64: ['x86_64-windows-msvc-full.zip'],
-  win32_arm64: ['aarch64-windows-msvc-full.zip'],
-  linux_arm64: ['aarch64-linux-gnu-full'],
-  linux_x64: ['x86_64-linux-musl-full', 'x86_64-linux-gnu-full'],
-};
-
 /**
  * @returns {string[]} possible nushell target specifiers for the current platform.
  */
-function getTargets(features: 'default' | 'full'): string[] {
+function getTargets(): string[] {
   const { arch, platform } = process;
   const selector = `${platform}_${arch}`;
-
-  if (features === 'default') {
-    return PLATFORM_DEFAULT_MAP[selector as Platform];
-  }
-  if (features === 'full') {
-    return PLATFORM_FULL_MAP[selector as Platform];
-  }
-  throw new Error(
-    `Failed to determine any valid targets: arch = ${arch}, platform = ${platform}, feature = ${features}`
-  );
+  return PLATFORM_DEFAULT_MAP[selector as Platform];
 }
 
 /**
@@ -65,8 +47,6 @@ export interface Tool {
   enablePlugins: string;
   /** A valid semantic version specifier for the tool. */
   versionSpec?: string;
-  /** Feature set: default or full. */
-  features: 'default' | 'full';
   /** The name of the tool binary (defaults to the repo name) */
   bin?: string;
 }
@@ -103,8 +83,8 @@ interface Release {
  * @param response the response to filter a release from with the given versionSpec.
  * @returns {Release[]} a single GitHub release.
  */
-function filterMatch(response: any, versionSpec: string | undefined, features: 'default' | 'full'): Release[] {
-  const targets = getTargets(features);
+function filterMatch(response: any, versionSpec: string | undefined): Release[] {
+  const targets = getTargets();
   return response.data
     .map((rel: { assets: any[]; tag_name: string }) => {
       const asset = rel.assets.find((ass: { name: string | string[] }) =>
@@ -128,8 +108,8 @@ function filterMatch(response: any, versionSpec: string | undefined, features: '
  * @param response the response to filter a latest release from.
  * @returns {Release[]} a single GitHub release.
  */
-function filterLatest(response: any, features: 'default' | 'full'): Release[] {
-  const targets = getTargets(features);
+function filterLatest(response: any): Release[] {
+  const targets = getTargets();
   const versions = response.data.map((r: { tag_name: string }) => r.tag_name);
   const latest = semver.rsort(versions)[0];
   return response.data
@@ -153,8 +133,8 @@ function filterLatest(response: any, features: 'default' | 'full'): Release[] {
  * @param response the response to filter a latest release from.
  * @returns {Release[]} a single GitHub release.
  */
-function filterLatestNightly(response: any, features: 'default' | 'full'): Release[] {
-  const targets = getTargets(features);
+function filterLatestNightly(response: any): Release[] {
+  const targets = getTargets();
   const publishedAt = response.data.map((r: { published_at: string }) => r.published_at);
   const sortedDates = publishedAt.sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime());
   const latest = sortedDates[0];
@@ -183,16 +163,14 @@ function filterLatestNightly(response: any, features: 'default' | 'full'): Relea
  * @returns {Promise<Release>} a single GitHub release.
  */
 async function getRelease(tool: Tool): Promise<Release> {
-  const { owner, name, versionSpec, checkLatest = false, features = 'default' } = tool;
+  const { owner, name, versionSpec, checkLatest = false } = tool;
   const isNightly = versionSpec === 'nightly';
   const octokit = new Octokit({ auth: tool.githubToken });
 
   return octokit
     .paginate(octokit.repos.listReleases, { owner, repo: name }, (response, done) => {
-      const nightlyReleases = isNightly ? filterLatestNightly(response, features) : [];
-      const officialReleases = checkLatest
-        ? filterLatest(response, features)
-        : filterMatch(response, versionSpec, features);
+      const nightlyReleases = isNightly ? filterLatestNightly(response) : [];
+      const officialReleases = checkLatest ? filterLatest(response) : filterMatch(response, versionSpec);
       const releases = isNightly ? nightlyReleases : officialReleases;
 
       if (releases) {
@@ -203,10 +181,7 @@ async function getRelease(tool: Tool): Promise<Release> {
     .then((releases) => {
       const release = releases.find((release) => release != null);
       if (release === undefined) {
-        if (features === 'full') {
-          core.warning('The "full" feature was removed for Nu after v0.93.1, try to use "default" feature instead.');
-        }
-        throw new Error(`No release for Nusehll matching version specifier ${versionSpec} of ${features} feature.`);
+        throw new Error(`No release for Couchbase Shell matching version specifier ${versionSpec}.`);
       }
       return release;
     });

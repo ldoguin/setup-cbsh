@@ -11,31 +11,31 @@ on:
 
 defaults:
   run:
-    shell: nu {0}
+    shell: cbsh {0}
 
 jobs:
   test-matrix:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-22.04, macos-latest]
-        ver: [0.95.0, 0.93.0, 0.92.2, 0.91.0, 0.90.1, 0.88.1, 0.87.1, 0.86, 0.85, 0.83.1]
+        ver: [0.75.2]
 
     runs-on: ${{ matrix.os }}
-    name: test (${{matrix.os}}, nu@${{matrix.ver}})
+    name: test (${{matrix.os}}, cbsh@${{matrix.ver}})
     steps:
     - uses: actions/checkout@v4.1.7
-    - name: Setup nu@${{matrix.ver}}
-      uses: hustcer/setup-nu@v3
+    - name: Setup cbsh@${{matrix.ver}}
+      uses: hustcer/setup-cbsh@v1
       with:
         enable-plugins: false
         version: ${{matrix.ver}}
       env:
         ACTIONS_STEP_DEBUG: true
-    - name: Show Nu Version
-      run: print $'Nu version info:(char nl)'; print (version)
+    - name: Show Couchbase Shell Version
+      run: print $'Couchbase Shell version info:(char nl)'; print (version)
     - name: Show env Variables
       run: print $'Current env:(char nl)'; print $env
-    - name: Show Nu Binary Path
-      run: print $'Nu path:(which nu)(char nl)'
-    - name: Show Nu Package Contents
-      run: print $"(char nl)Dir contents:(char nl)"; print (ls ((which nu).path.0 | path dirname))
+    - name: Show Couchbase Shell Binary Path
+      run: print $'Couchbase Shell path:(which cbsh)(char nl)'
+    - name: Show Couchbase Shell Package Contents
+      run: print $"(char nl)Dir contents:(char nl)"; print (ls ((which cbsh).path.0 | path dirname))
