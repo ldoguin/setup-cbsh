@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    shell: cbsh {0}
+    shell: cbsh --script {0}
 
 jobs:
   test-latest:
@@ -35,14 +35,14 @@ jobs:
       shell: bash
     - name: Default shell will be `cbsh`
       run: |
-        print $'Couchbase Shell version info:(char nl)'; print (version)
-        print $'Current env:(char nl)'; print $env
-        print 'Current NU_LIB_DIRS:'
-        print $env.NU_LIB_DIRS
-        print $'Couchbase Shell path:(which cbsh)(char nl)'
-        print $"(char nl)Dir contents:(char nl)"; print (ls ((which cbsh).path.0 | path dirname))
+        echo $'Couchbase Shell version info:(char nl)'; echo (version)
+        echo $'Current env:(char nl)'; echo $env
+        echo 'Current NU_LIB_DIRS:'
+        echo $env.NU_LIB_DIRS
+        echo $'Couchbase Shell path:(which cbsh)(char nl)'
+        echo $"(char nl)Dir contents:(char nl)"; echo (ls ((which cbsh).path.0 | path dirname))
         def greeting [name: string] {
-          print $'Hello ($name)'
+          echo $'Hello ($name)'
         }
         greeting hustcer
 
@@ -58,11 +58,11 @@ jobs:
     - name: Setup cbsh@latest
       uses: ldoguin/setup-cbsh@v1
       with:
-        version: v0.86
+        version: v0.75.2
         enable-plugins: true
       env:
         ACTIONS_STEP_DEBUG: true
-    - run: print $'Couchbase Shell version info:(char nl)'; version
-    - run: print $'Current env:(char nl)'; $env
-    - run: print $'Couchbase Shell path:(which cbsh)(char nl)'
-    - run: print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
+    - run: echo $'Couchbase Shell version info:(char nl)'; version
+    - run: echo $'Current env:(char nl)'; $env
+    - run: echo $'Couchbase Shell path:(which cbsh)(char nl)'
+    - run: echo $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)

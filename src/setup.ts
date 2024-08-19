@@ -222,7 +222,6 @@ export async function checkOrInstallTool(tool: Tool): Promise<InstalledTool> {
 
   // first check if we have previously downloaded the tool
   let dir = tc.find(name, versionSpec || '*');
-
   if (!dir) {
     // find the latest release by querying GitHub API
     const { version, downloadUrl } = await getRelease(tool);
@@ -239,19 +238,10 @@ export async function checkOrInstallTool(tool: Tool): Promise<InstalledTool> {
     }
     core.debug(`Successfully extracted archive for ${name} v${version}`);
 
-    const paths = await globby(
-      [
-        `${extractDir}/**/nu_plugin_*`,
-        // For nu v0.61~0.63 on Windows OS
-        path
-          .join(extractDir, '**', 'nu_plugin_*')
-          .replace(/\\/g, '/'),
-      ],
-      {
-        unique: true,
-        absolute: true,
-      }
-    );
+    const paths = await globby([path.join(extractDir, '**').replace(/\\/g, '/')], {
+      unique: true,
+      absolute: true,
+    });
     dir = await tc.cacheDir(path.dirname(paths[0]), name, version);
 
     // handle bad binary permissions, the binary needs to be executable!

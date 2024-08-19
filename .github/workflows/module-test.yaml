@@ -12,7 +12,7 @@ on:
 
 defaults:
   run:
-    shell: cbsh {0}
+    shell: cbsh --script {0}
 
 jobs:
   test-latest:
@@ -20,7 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, macos-latest, windows-latest]
-        ver: [0.75.2]
+
+        ver: [v0.75.2]
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, cbsh@${{matrix.ver}})
@@ -34,12 +35,12 @@ jobs:
       env:
         ACTIONS_STEP_DEBUG: true
     - name: Show Couchbase Shell Version
-      run: print $'Couchbase Shell version info:(char nl)'; print (version)
+      run: echo $'Couchbase Shell version info:(char nl)'; echo (version)
     - name: Use Your Couchbase Shell Modules
       run: |
-        cbsh -c "use cbsh/module.cbsh *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
+        cbsh -c "use nu/module.nu *; echo (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
     - name: Use Your Couchbase Shell Modules by Absolute Path
       run: |
-        use ${{ github.workspace }}/cbsh/module.cbsh *
-        print 'Use module from: ${{ github.workspace }}/cbsh/module.cbsh'
-        print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ-ABSOLUTE-PATH')
+        use ${{ github.workspace }}/nu/module.nu *
+        echo 'Use module from: ${{ github.workspace }}/nu/module.nu'
+        echo (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ-ABSOLUTE-PATH')

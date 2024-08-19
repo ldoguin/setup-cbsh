@@ -49,11 +49,11 @@ jobs:
       run: which $(printf cbsh | tr '[:upper:]' '[:lower:]') && echo "Dir contents --->:" && ls -la "$(dirname `which cbsh`)"
       shell: bash
     - name: Spawn a Couchbase Shell Session and Display Version Info
-      run: cbsh -c 'print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)'
+      run: cbsh -c 'echo (version); echo $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)'
       shell: bash
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#custom-shell
     - name: Use Couchbase Shell as Default Shell
-      shell: cbsh {0}
+      shell: cbsh --script {0}
       run: |
-        print $'Current env:(char nl)'
-        print $env
+        echo $'Current env:(char nl)'
+        echo $env
