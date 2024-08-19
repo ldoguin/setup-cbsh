@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+## Setup-cbsh
+
+
+## Setup-nu History
+
 ## [3.12] - 2024-06-27
 
 ### Bug Fixes
