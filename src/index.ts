@@ -16,7 +16,6 @@ async function main() {
     console.log(`versionSpec: ${versionSpec}`);
     const checkLatest = (core.getInput('check-latest') || 'false').toUpperCase() === 'TRUE';
     const enablePlugins = (core.getInput('enable-plugins') || 'false').toLowerCase();
-    const features = core.getInput('features') || 'default';
     const githubToken = core.getInput('github-token');
     const version = ['*', 'nightly'].includes(versionSpec) ? versionSpec : semver.valid(semver.coerce(versionSpec));
     console.log(`coerce version: ${version}`);
@@ -29,15 +28,14 @@ async function main() {
       checkLatest,
       githubToken,
       enablePlugins,
-      bin: 'nu',
-      owner: 'nushell',
+      bin: 'cbsh',
+      owner: 'couchbaselabs',
       versionSpec: ver,
-      features: features as 'default' | 'full',
-      name: version === 'nightly' ? 'nightly' : 'nushell',
+      name: version === 'nightly' ? 'nightly' : 'couchbase-shell',
     });
     core.addPath(tool.dir);
     // version: * --> 0.95.0; nightly --> nightly-56ed69a; 0.95 --> 0.95.0
-    core.info(`Successfully setup Nu ${tool.version}, with ${features} features.`);
+    core.info(`Successfully setup Couchbase Shell ${tool.version}.`);
 
     // Change to workspace directory so that the register-plugins.nu script can be found.
     shell.cd(process.env.GITHUB_WORKSPACE);

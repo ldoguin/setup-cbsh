@@ -1,4 +1,4 @@
-name: Nu Module Test
+name: Couchbase Shell Module Test
 
 on:
   push:
@@ -6,13 +6,13 @@ on:
       - main
       - develop
       - release/*
-      - feature/nu-lib
+      - feature/cbsh-lib
     paths-ignore:
       - '**.md'
 
 defaults:
   run:
-    shell: nu {0}
+    shell: cbsh {0}
 
 jobs:
   test-latest:
@@ -20,26 +20,26 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, macos-latest, windows-latest]
-        ver: [0.93.0, 0.92.2, 0.91.0, 0.90.1, 0.88.1, 0.87.1, 0.86]
+        ver: [0.75.2]
 
     runs-on: ${{ matrix.os }}
-    name: test (${{matrix.os}}, nu@${{matrix.ver}})
+    name: test (${{matrix.os}}, cbsh@${{matrix.ver}})
     steps:
     - uses: actions/checkout@v4.1.7
-    - name: Setup nu@latest
-      uses: hustcer/setup-nu@develop
+    - name: Setup cbsh@latest
+      uses: hustcer/setup-cbsh@develop
       with:
         enable-plugins: true
         version: ${{matrix.ver}}
       env:
         ACTIONS_STEP_DEBUG: true
-    - name: Show Nu Version
-      run: print $'Nu version info:(char nl)'; print (version)
-    - name: Use Your Nu Modules
+    - name: Show Couchbase Shell Version
+      run: print $'Couchbase Shell version info:(char nl)'; print (version)
+    - name: Use Your Couchbase Shell Modules
       run: |
-        nu -c "use nu/module.nu *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
-    - name: Use Your Nu Modules by Absolute Path
+        cbsh -c "use cbsh/module.cbsh *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
+    - name: Use Your Couchbase Shell Modules by Absolute Path
       run: |
-        use ${{ github.workspace }}/nu/module.nu *
-        print 'Use module from: ${{ github.workspace }}/nu/module.nu'
+        use ${{ github.workspace }}/cbsh/module.cbsh *
+        print 'Use module from: ${{ github.workspace }}/cbsh/module.cbsh'
         print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ-ABSOLUTE-PATH')

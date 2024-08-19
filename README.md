@@ -1,10 +1,10 @@
-# setup-nu
+# setup-cbsh
 
-[中文说明](README.zh-CN.md)
+Originally forked from https://github.com/hustcer/setup-nu/, many thanks to [hustcer](https://github.com/hustcer
 
-[![Latest Main Check](https://github.com/hustcer/setup-nu/actions/workflows/latest-matrix.yaml/badge.svg)](https://github.com/hustcer/setup-nu/actions/workflows/latest-matrix.yaml)
+[![Latest Main Check](https://github.com/ldoguin/setup-cbsh/actions/workflows/latest-matrix.yaml/badge.svg)](https://github.com/ldoguin/setup-cbsh/actions/workflows/latest-matrix.yaml)
 
-This GitHub Action will setup a [Nushell](https://github.com/nushell/nushell) environment for you.
+This GitHub Action will setup a [Couchbase Shell](https://github.com/couchbaselabs/couchbase-shell) environment for you.
 
 ## Usage
 
@@ -18,15 +18,15 @@ Then you can set the command you want to run in the following steps, and don't f
 to make the commands be executed by `nu`:
 
 ```yaml
-- uses: hustcer/setup-nu@v3
+- uses: ldoguin/setup-cbsh@v1
   with:
-    version: "0.90" # Don't use 0.90 here, as it was a float number and will be convert to 0.9, you can use v0.90/0.90.0 or '0.90'
+    version: "v0.75.2" # Don't use 0.90 here, as it was a float number and will be convert to 0.9, you can use v0.90/0.90.0 or '0.90'
 - run: print $'Nu version info:(char nl)'; version
-  shell: nu {0}
+  shell: cbsh {0}
 - name: Default shell will be `nu`
-  shell: nu {0}
+  shell: cbsh {0}
   run: |
-    print $'Nu path:(which nu)(char nl)'
+    print $'Nu path:(which cbsh)(char nl)'
     def greeting [name: string] {
         print $'Hello ($name)'
     }
@@ -35,7 +35,7 @@ to make the commands be executed by `nu`:
 
 #### Used as Default Shell
 
-Of cause, You can also set the default shell to `nu` by setting the `defaults.run.shell` config:
+Of cause, You can also set the default shell to `cbsh` by setting the `defaults.run.shell` config:
 
 ```yaml
 name: basic
@@ -43,17 +43,17 @@ name: basic
 on: push
 defaults:
   run:
-    shell: nu {0}
+    shell: cbsh {0}
 
 jobs:
   basic-usage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
-      - uses: hustcer/setup-nu@main
+      - uses: ldoguin/setup-cbsh@main
         with:
           version: "*"
-      - run: version; print $"(char nl)Dir contents:(char nl)"; ls ((which nu).path.0 | path dirname)
+      - run: version; print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
       - run: |
           print $'Current env:(char nl)'
           print $env
@@ -61,7 +61,7 @@ jobs:
         run: pwd && ls -la
         shell: bash
 ```
-
+<!-- 
 #### Use Nu Modules
 
 To use modules in `Nu`, please refer to the following examples:
@@ -69,25 +69,25 @@ To use modules in `Nu`, please refer to the following examples:
 1. Use Nu modules in `nu -c`
 
 ```yaml
-- name: Setup nu
-  uses: hustcer/setup-nu@v3
+- name: Setup cbsh
+  uses: ldoguin/setup-cbsh@v3
   with:
     version: 0.95.0
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-- name: Use Your Nu Modules
-  shell: nu {0}
+- name: Use Your Couchbase Shell Modules
+  shell: cbsh {0}
   run: |
-    nu -c "use nu/module.nu *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
+    cbsh -c "use nu/module.nu *; print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')"
 ```
 
-You have to wrap the `nu` code in `nu -c ""`, and the nu version should be equal to or above `0.69`.
+You have to wrap the `cbsh` code in `cbsh -c ""`, and the cbsh version should be equal to or above `0.69`.
 
 2. Use modules from absolute path
 
 ```yaml
 - name: Setup nu
-  uses: hustcer/setup-nu@v3
+  uses: ldoguin/setup-cbsh@v3
   with:
     version: 0.95.0
   env:
@@ -105,8 +105,8 @@ Again, the nu version should be equal to or above `0.69`.
 3. Copy your modules to one of the default `$env.NU_LIB_DIRS`
 
 ```yaml
-- name: Setup nu@latest
-  uses: hustcer/setup-nu@v3
+- name: Setup cbsh@latest
+  uses: ldoguin/setup-cbsh@v3
   with:
     version: 0.95.0
   env:
@@ -126,11 +126,11 @@ Again, the nu version should be equal to or above `0.69`.
 
 To make it work please make sure that the nu version should be equal to or above `0.85`.
 
-They are not perfect yet, but they do work. BTW: Please tell me if you found a better way and PRs are always welcomed.
+They are not perfect yet, but they do work. BTW: Please tell me if you found a better way and PRs are always welcomed. 
 
-#### Use Nu Nightly Version
+#### Use Couchbase Shell Nightly Version
 
-`Nushell` is currently in active development, if you want to use the latest features it's also available by set the version to `nightly`, just as below:
+`Couchbase Shell` is currently in active development, if you want to use the latest features it's also available by set the version to `nightly`, just as below:
 
 ```yaml
 - uses: hustcer/setup-nu@v3
@@ -185,7 +185,7 @@ the latest version:
 
 The semver specification is passed directly to NPM's [semver package](https://www.npmjs.com/package/semver).
 This GitHub Action will install the latest matching release.
-
+-->
 ## License
 
 Licensed under:
