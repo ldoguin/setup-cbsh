@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env cbsh
 # Author: hustcer
 # Created: 2022/04/29 10:06:56
 # Description: Script to release setup-nu
@@ -15,7 +15,7 @@ export def 'make-release' [
   --update-log(-u),   # Set to `true` do enable updating CHANGELOG.md
 ] {
 
-  cd $env.SETUP_NU_PATH
+  cd $env.SETUP_CBSH_PATH
   let releaseVer = (open package.json | get actionVer)
 
   if (has-ref $releaseVer) {
@@ -34,7 +34,7 @@ export def 'make-release' [
   }
   # Delete tags that not exist in remote repo
   git fetch origin --prune '+refs/tags/*:refs/tags/*'
-  let commitMsg = $'A new release for version: ($releaseVer) created by Release command of setup-nu'
+  let commitMsg = $'A new release for version: ($releaseVer) created by Release command of setup-cbsh'
   git tag $releaseVer -am $commitMsg
   # Remove local major version tag if exists and ignore errors
   do -i { git tag -d $majorTag | complete | ignore }

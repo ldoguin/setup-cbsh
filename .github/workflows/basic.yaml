@@ -12,7 +12,8 @@ on:
 
 defaults:
   run:
-    shell: cbsh {0}
+    shell: |
+      cbsh --script {0}
 
 jobs:
   basic-usage:
@@ -23,10 +24,11 @@ jobs:
       with:
         version: '*'
         enable-plugins: true
-    - run: print (version); print $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
     - run: |
-        print $'Current env:(char nl)'
-        print $env
+        echo (version); echo $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
+    - run: |
+        echo $'Current env:(char nl)'
+        echo $env
     - name: You can run bash commands, too
       run: pwd && ls -la
       shell: bash

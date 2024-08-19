@@ -12,7 +12,7 @@ export async function registerPlugins(enablePlugins: string, version: string) {
   if (enablePlugins === '' || enablePlugins === 'false') {
     return;
   }
-  const LEGACY_VERSION = '0.92.3';
+  const LEGACY_VERSION = '0.75.2';
   const script = 'register-plugins.nu';
   const isLegacyVersion = !version.includes('nightly') && semver.lte(version, LEGACY_VERSION);
   await fs.writeFile(script, pluginRegisterScript);
@@ -23,14 +23,14 @@ export async function registerPlugins(enablePlugins: string, version: string) {
     console.log(`Fixed file permissions (-> 0o755) for ${script}`);
   }
   if (isLegacyVersion) {
-    shell.exec(`nu ${script} "'${enablePlugins}'" ${version} --is-legacy`);
+    shell.exec(`cbsh ${script} "'${enablePlugins}'" ${version} --is-legacy`);
   } else {
-    shell.exec(`nu ${script} "'${enablePlugins}'" ${version}`);
+    shell.exec(`cbsh ${script} "'${enablePlugins}'" ${version}`);
   }
   // console.log('Contents of `do-register.nu`:\n');
   // const content = shell.cat('do-register.nu');
   // console.log(content.toString());
   console.log('\nRegistering plugins...\n');
-  shell.exec('nu do-register.nu');
+  shell.exec('cbsh do-register.nu');
   console.log(`Plugins registered successfully for Nu ${version}.`);
 }

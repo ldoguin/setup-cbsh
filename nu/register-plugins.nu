@@ -1,4 +1,4 @@
-#!/usr/bin/env nu
+#!/usr/bin/env cbsh
 
 # REF
 #   1. https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
@@ -13,22 +13,22 @@ def main [
 ] {
 
   let useRegister = if $is_legacy { true } else { false }
-  let nuDir = (which nu | get 0.path | path dirname)
-  print $'enablePlugins: ($enablePlugins) of Nu version: ($version)'
+  let cbshDir = (which cbsh | get 0.path | path dirname)
+  print $'enablePlugins: ($enablePlugins) of Couchbase Shell version: ($version)'
 
-  print 'Output of (which nu):'
-  print (which nu)
+  print 'Output of (which cbsh):'
+  print (which cbsh)
   print 'Directory contents:'
-  ls $nuDir | print
+  ls $cbshDir | print
 
   # print $nu
   # Create Nu config directory if it does not exist
   if not ($nu.default-config-dir | path exists) { mkdir $nu.default-config-dir }
   config env --default | save -f $nu.env-path
-  config nu --default | save -f $nu.config-path
+  config cbsh --default | save -f $nu.config-path
   # print (ls $nu.default-config-dir)
 
-  let allPlugins = ls $nuDir | where name =~ nu_plugin
+  let allPlugins = ls $cbshDir | where name =~ nu_plugin
   let filteredPlugins = if $enablePlugins == "'true'" or $enablePlugins == 'true' {
       $allPlugins
     } else {

@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    shell: cbsh {0}
+    shell: cbsh --script{0}
 
 jobs:
   test-latest:
@@ -19,33 +19,33 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-22.04, macos-latest]
-        ver: [0.75.2]
+        ver: [v0.75.2]
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, cbsh@${{matrix.ver}})
     steps:
     - uses: actions/checkout@v4.1.7
     - name: Setup cbsh@latest
-      uses: hustcer/setup-cbsh@develop
+      uses: ldoguin/setup-cbsh@develop
       with:
         enable-plugins: false
         version: ${{matrix.ver}}
     - name: Show Couchbase Shell Version and NU_LIB_DIRS
       run: |
-        print $'Couchbase Shell version info:(char nl)'; print (version)
-        print 'NU_LIB_DIRS:'
-        $env.NU_LIB_DIRS | print
+        echo $'Couchbase Shell version info:(char nl)'; echo (version)
+        echo 'NU_LIB_DIRS:'
+        $env.NU_LIB_DIRS | echo
     - name: Prepare Couchbase Shell Modules
       run: |
-        # Licbshx: '/home/runner/.config/cbshshell'
-        # Windows: 'C:/Users/runneradmin/AppData/Roaming/cbshshell'
-        # Darwin: '/Users/runner/Library/Application Support/cbshshell'
-        let LIB_DIR = [$cbsh.default-config-dir 'scripts'] | path join
+        # Linux: '/home/runner/.config/nushell'
+        # Windows: 'C:/Users/runneradmin/AppData/Roaming/nushell'
+        # Darwin: '/Users/runner/Library/Application Support/nushell'
+        let LIB_DIR = [$nu.default-config-dir 'scripts'] | path join
         if not ($LIB_DIR | path exists) { mkdir $LIB_DIR }
-        cp -r cbsh/* $LIB_DIR
-        print $'Contents of ($LIB_DIR):'
+        cp -r nu/* $LIB_DIR
+        echo $'Contents of ($LIB_DIR):'
         ls $LIB_DIR
     - name: Use Your Couchbase Shell Modules
       run: |
-        use module.cbsh *
-        print (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')
+        use module.nu *
+        echo (get-env 'ABC-XYZ' 'DEFAULT-ABC-XYZ')

@@ -53,7 +53,7 @@ jobs:
       shell: bash
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#custom-shell
     - name: Use Couchbase Shell as Default Shell
-      shell: cbsh {0}
+      shell: cbsh --script {0}
       run: |
-        print $'Current env:(char nl)'
-        print $env
+        echo $'Current env:(char nl)'
+        echo $env

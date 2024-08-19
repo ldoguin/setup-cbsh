@@ -11,31 +11,31 @@ on:
 
 defaults:
   run:
-    shell: cbsh {0}
+    shell: cbsh --script {0}
 
 jobs:
   test-matrix:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-22.04, macos-latest]
-        ver: [0.75.2]
+        ver: [v0.75.2]
 
     runs-on: ${{ matrix.os }}
     name: test (${{matrix.os}}, cbsh@${{matrix.ver}})
     steps:
     - uses: actions/checkout@v4.1.7
     - name: Setup cbsh@${{matrix.ver}}
-      uses: hustcer/setup-cbsh@v1
+      uses: ldoguin/setup-cbsh@v1
       with:
         enable-plugins: false
         version: ${{matrix.ver}}
       env:
         ACTIONS_STEP_DEBUG: true
     - name: Show Couchbase Shell Version
-      run: print $'Couchbase Shell version info:(char nl)'; print (version)
+      run: echo $'Couchbase Shell version info:(char nl)'; echo (version)
     - name: Show env Variables
-      run: print $'Current env:(char nl)'; print $env
+      run: echo $'Current env:(char nl)'; echo $env
     - name: Show Couchbase Shell Binary Path
-      run: print $'Couchbase Shell path:(which cbsh)(char nl)'
+      run: echo $'Couchbase Shell path:(which cbsh)(char nl)'
     - name: Show Couchbase Shell Package Contents
-      run: print $"(char nl)Dir contents:(char nl)"; print (ls ((which cbsh).path.0 | path dirname))
+      run: echo $"(char nl)Dir contents:(char nl)"; echo (ls ((which cbsh).path.0 | path dirname))

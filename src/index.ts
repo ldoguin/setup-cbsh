@@ -4,7 +4,6 @@
  */
 
 import shell from 'shelljs';
-import semver from 'semver';
 import * as core from '@actions/core';
 
 import * as setup from './setup';
