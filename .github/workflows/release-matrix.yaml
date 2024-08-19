@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4.1.7
     - name: Setup cbsh@${{matrix.ver}}
-      uses: hustcer/setup-cbsh@v1
+      uses: ldoguin/setup-cbsh@v1
       with:
         enable-plugins: false
         version: ${{matrix.ver}}
