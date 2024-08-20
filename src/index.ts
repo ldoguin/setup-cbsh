@@ -16,6 +16,7 @@ async function main() {
     console.log(`versionSpec: ${versionSpec}`);
     const checkLatest = (core.getInput('check-latest') || 'false').toUpperCase() === 'TRUE';
     const enablePlugins = (core.getInput('enable-plugins') || 'false').toLowerCase();
+    const config = core.getMultilineInput('config');
     const githubToken = core.getInput('github-token');
     const version = ['*', 'nightly'].includes(versionSpec) ? versionSpec : semver.valid(semver.coerce(versionSpec));
     console.log(`coerce version: ${version}`);
@@ -41,6 +42,9 @@ async function main() {
     shell.cd(process.env.GITHUB_WORKSPACE);
     console.log(`Current directory: ${process.cwd()}`);
     await registerPlugins(enablePlugins, tool.version);
+    if (config.length > 0) {
+      await setup.registerConfiguration(config);
+    }
   } catch (err) {
     core.setFailed(err.message);
   }

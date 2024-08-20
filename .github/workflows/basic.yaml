@@ -16,11 +16,13 @@ jobs:
       with:
         version: '*'
         enable-plugins: true
+        config:  ${{ secrets.CBSHELL_CONFIG }}
     - run: |
         echo (version); echo $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
     - run: |
         echo $'Current env:(char nl)'
         echo $env
+        cb-env
     - name: You can run bash commands, too
       run: pwd && ls -la
       shell: bash

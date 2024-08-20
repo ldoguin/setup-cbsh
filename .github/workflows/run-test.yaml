@@ -28,6 +28,7 @@ jobs:
       with:
         check-latest: true
         enable-plugins: true
+        config:  ${{ secrets.CBSHELL_CONFIG }}
       env:
         ACTIONS_STEP_DEBUG: true
     - name: You can run bash commands, too
@@ -45,6 +46,7 @@ jobs:
           echo $'Hello ($name)'
         }
         greeting hustcer
+        cb-env
 
   test-ver:
     strategy:

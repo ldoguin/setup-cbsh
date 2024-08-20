@@ -5,11 +5,13 @@
 
 import * as path from 'path';
 import { globby } from 'globby';
+import toml from 'toml';
 import * as semver from 'semver';
 import * as core from '@actions/core';
 import * as tc from '@actions/tool-cache';
 import { Octokit } from '@octokit/rest';
-import { promises as fs, constants as fs_constants } from 'fs';
+import { existsSync, promises as fs, constants as fs_constants } from 'fs';
+import os from 'os';
 
 type Platform = 'darwin_x64' | 'darwin_arm64' | 'win32_x64' | 'win32_arm64' | 'linux_x64' | 'linux_arm64';
 
@@ -252,4 +254,36 @@ export async function checkOrInstallTool(tool: Tool): Promise<InstalledTool> {
   const version = path.basename(path.dirname(dir));
 
   return { version, dir, ...tool };
+}
+
+export async function registerConfiguration(config: string[]) {
+  const multiLineConfig = config.join(os.EOL);
+  const configRoot = process.env.HOME + path.sep + '.cbsh';
+  const configPath = configRoot + path.sep + 'config';
+  try {
+    if (!existsSync(configRoot)) {
+      await fs.mkdir(configRoot);
+    }
+    await fs.writeFile(configPath, multiLineConfig, { flag: 'w+' });
+  } catch (err) {
+    core.error(err);
+  }
+
+  try {
+    const parsedToml = toml.parse(multiLineConfig);
+    parsedToml.llm.forEach((el: { api_key: string }) => {
+      core.setSecret(el.api_key);
+    });
+    parsedToml.cluster.forEach((el: { connstr: string; username: string; password: string }) => {
+      core.setSecret(el.connstr);
+      core.setSecret(el.username);
+      core.setSecret(el.password);
+    });
+    parsedToml['capella-organization'].forEach((el: { [x: string]: string }) => {
+      core.setSecret(el['access-key']);
+      core.setSecret(el['secret-key']);
+    });
+  } catch (err) {
+    core.error(err);
+  }
 }

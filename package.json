@@ -26,7 +26,8 @@
     "@actions/tool-cache": "^2.0.1",
     "@octokit/rest": "^21.0.1",
     "globby": "^14.0.2",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
