@@ -5,7 +5,7 @@ import { promises as fs, constants as fs_constants } from 'fs';
 const nu = String.raw;
 
 const pluginRegisterScript = nu`
-#!/usr/bin/env nu
+#!/usr/bin/env cbsh
 
 # REF
 #   1. https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
@@ -20,11 +20,11 @@ def main [
 ] {
 
   let useRegister = if $is_legacy { true } else { false }
-  let nuDir = (which nu | get 0.path | path dirname)
-  print $'enablePlugins: ($enablePlugins) of Nu version: ($version)'
-
-  print 'Output of (which nu):'
-  print (which nu)
+  let nuDir = (which cbsh | get 0.path | path dirname)
+  print $'enablePlugins: ($enablePlugins) of Couchbase Shell version: ($version)'
+ 
+  print 'Output of (which cbsh):'
+  print (which cbsh)
   print 'Directory contents:'
   ls $nuDir | print
 
@@ -73,14 +73,14 @@ export async function registerPlugins(enablePlugins: string, version: string) {
     console.log(`Fixed file permissions (-> 0o755) for ${script}`);
   }
   if (isLegacyVersion) {
-    shell.exec(`nu ${script} "'${enablePlugins}'" ${version} --is-legacy`);
+    shell.exec(`cbsh --script ${script} "'${enablePlugins}'" ${version} --is-legacy`);
   } else {
-    shell.exec(`nu ${script} "'${enablePlugins}'" ${version}`);
+    shell.exec(`cbsh --script ${script} "'${enablePlugins}'" ${version}`);
   }
   // console.log('Contents of `do-register.nu`:\n');
   // const content = shell.cat('do-register.nu');
   // console.log(content.toString());
   console.log('\nRegistering plugins...\n');
-  shell.exec('nu do-register.nu');
-  console.log(`Plugins registered successfully for Nu ${version}.`);
+  shell.exec('cbsh do-register.nu');
+  console.log(`Plugins registered successfully for Couchbase Shell ${version}.`);
 }

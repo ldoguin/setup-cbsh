@@ -21,12 +21,12 @@ def main [
   print 'Directory contents:'
   ls $cbshDir | print
 
-  # print $nu
+  print $nu
   # Create Nu config directory if it does not exist
   if not ($nu.default-config-dir | path exists) { mkdir $nu.default-config-dir }
   config env --default | save -f $nu.env-path
-  config cbsh --default | save -f $nu.config-path
-  # print (ls $nu.default-config-dir)
+  config nu --default | save -f $nu.config-path
+  echo (ls $nu.default-config-dir)
 
   let allPlugins = ls $cbshDir | where name =~ nu_plugin
   let filteredPlugins = if $enablePlugins == "'true'" or $enablePlugins == 'true' {

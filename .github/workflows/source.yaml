@@ -1,0 +1,22 @@
+name: Basic Develop Test for Source based CBShell
+
+on: [workflow_dispatch]
+
+defaults:
+  run:
+    shell: |
+      cbsh --script {0}
+
+jobs:
+  basic-usage:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4.1.7
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+    - uses: ldoguin/setup-cbsh@develop
+      with:
+        version: 'source'
+        enable-plugins: true
+        config:  ${{ secrets.CBSHELL_CONFIG }}
+    - run: |
+        echo (version); echo $"(char nl)Dir contents:(char nl)"; ls ((which cbsh).path.0 | path dirname)
