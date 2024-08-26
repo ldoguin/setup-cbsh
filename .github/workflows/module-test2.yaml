@@ -11,7 +11,7 @@ on:
 
 defaults:
   run:
-    shell: cbsh --script{0}
+    shell: cbsh --script {0}
 
 jobs:
   test-latest:
