@@ -271,18 +271,24 @@ export async function registerConfiguration(config: string[]) {
 
   try {
     const parsedToml = toml.parse(multiLineConfig);
-    parsedToml.llm.forEach((el: { api_key: string }) => {
-      core.setSecret(el.api_key);
-    });
-    parsedToml.cluster.forEach((el: { connstr: string; username: string; password: string }) => {
-      core.setSecret(el.connstr);
-      core.setSecret(el.username);
-      core.setSecret(el.password);
-    });
-    parsedToml['capella-organization'].forEach((el: { [x: string]: string }) => {
-      core.setSecret(el['access-key']);
-      core.setSecret(el['secret-key']);
-    });
+    if (parsedToml.llm) {
+      parsedToml.llm.forEach((el: { api_key: string }) => {
+        core.setSecret(el.api_key);
+      });
+    }
+    if (parsedToml.cluster) {
+      parsedToml.cluster.forEach((el: { connstr: string; username: string; password: string }) => {
+        core.setSecret(el.connstr);
+        core.setSecret(el.username);
+        core.setSecret(el.password);
+      });
+    }
+    if (parsedToml['capella-organization']) {
+      parsedToml['capella-organization'].forEach((el: { [x: string]: string }) => {
+        core.setSecret(el['access-key']);
+        core.setSecret(el['secret-key']);
+      });
+    }
   } catch (err) {
     core.error(err);
   }
