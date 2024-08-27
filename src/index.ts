@@ -18,21 +18,20 @@ async function main() {
     const enablePlugins = (core.getInput('enable-plugins') || 'false').toLowerCase();
     const config = core.getMultilineInput('config');
     const githubToken = core.getInput('github-token');
-    const version = ['*', 'nightly', 'source'].includes(versionSpec)
-      ? versionSpec
-      : semver.valid(semver.coerce(versionSpec));
+    const branch = core.getInput('branch');
+    const version = ['*', 'nightly'].includes(versionSpec) ? versionSpec : semver.valid(semver.coerce(versionSpec));
     console.log(`coerce version: ${version}`);
     const ver = version === null ? undefined : version;
     if (!ver) {
       core.setFailed(`Invalid version: ${versionSpec}`);
     }
     let installedVersion = '';
-    if (ver === 'source') {
+    if (branch) {
       // build latest
-      shell.exec(`cargo install --git https://github.com/couchbaselabs/couchbase-shell`);
+      shell.exec(`cargo install --git https://github.com/couchbaselabs/couchbase-shell --branch ${branch}`);
       const { stdout } = shell.exec(`cbsh --version`);
       installedVersion = stdout;
-      core.info(`Successfully installed Couchbase Shell ${installedVersion} from source.`);
+      core.info(`Successfully installed Couchbase Shell ${installedVersion} from branch ${branch}.`);
     } else {
       const tool = await setup.checkOrInstallTool({
         checkLatest,
